@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ReactPaginateModule from "react-paginate";
@@ -11,6 +12,7 @@ import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 import { fetchMovies } from "../../services/movieService";
+import type { Movie } from "../../types/movie";
 import css from "./App.module.css";
 
 type ModuleWithDefault<T> = { default: T };
@@ -24,7 +26,7 @@ const ReactPaginate = (
 const App = () => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [selectedMovie, setSelectedMovie] = useState<number | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["movies", query, page],
@@ -40,8 +42,8 @@ const App = () => {
     setPage(1);
   };
 
-  const handleMovieSelect = (movieId: number) => {
-    setSelectedMovie(movieId);
+  const handleMovieSelect = (movie: Movie) => {
+    setSelectedMovie(movie);
   };
 
   const handleCloseModal = () => {
@@ -74,8 +76,8 @@ const App = () => {
         />
       )}
 
-      {selectedMovie !== null && (
-        <MovieModal movieId={selectedMovie} onClose={handleCloseModal} />
+      {selectedMovie && (
+        <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
       )}
     </div>
   );
